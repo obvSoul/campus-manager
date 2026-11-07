@@ -1,0 +1,60 @@
+/* Sombre = Onyx (Discord) */
+:root, [data-theme="dark"] { --bg: 7, 7, 9; --text: #dfe0e3; --muted: #94959c; --line: rgba(255,255,255,.07); --hover: rgba(255,255,255,.06);
+  --accent: #5865f2; --ok: #23a55a; --warn: #f0b232; --bad: #f23f43; }
+[data-theme="light"] { --bg: 250, 251, 253; --text: #1b1f2c; --muted: #5d6578; --line: rgba(0,0,0,.08); --hover: rgba(0,0,0,.05);
+  --accent: #5865f2; --ok: #1f9d63; --warn: #b7791f; --bad: #d64545; }
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: transparent; overflow: hidden; }
+body { color: var(--text); font: 12.5px/1.4 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif; user-select: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; padding: 0; }
+.grow { flex: 1; min-width: 0; } .ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.w { position: relative; height: 100%; display: flex; flex-direction: column; border-radius: 14px; overflow: hidden;
+  background: rgba(var(--bg), var(--a)); border: 1px solid var(--line); }
+/* Mode entièrement transparent : pas de cadre, texte lisible grâce à une ombre portée. */
+.w.clear { border-color: transparent; }
+[data-theme="dark"] .w.clear { --muted: #d7dbe4; text-shadow: 0 1px 2px rgba(0,0,0,.95), 0 0 6px rgba(0,0,0,.7); }
+[data-theme="light"] .w.clear { --muted: #2b3142; text-shadow: 0 1px 2px rgba(255,255,255,.95), 0 0 6px rgba(255,255,255,.8); }
+.w.clear .w-bar { background: rgba(0,0,0,.35); } .w.clear .ficon { box-shadow: 0 1px 3px rgba(0,0,0,.6); }
+.w.clear .w-row:hover, .w.clear .w-file:hover { background: rgba(0,0,0,.25); }
+.w.clear .w-menu { text-shadow: none; }
+.w.clear .w-grip { opacity: .8; }
+.w-head { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 12px; height: 44px; flex: none; -webkit-app-region: drag; }
+.w-head button, .w-head input { -webkit-app-region: no-drag; }
+.logo { width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: #5865f2; color: #fff; font-weight: 700; font-size: 12px; flex: none; }
+.w-title { font-weight: 650; font-size: 13px; line-height: 1.1; } .w-sub { color: var(--muted); font-size: 11px; }
+.w-badge { background: var(--accent); color: #fff; border-radius: 10px; padding: 0 7px; font-size: 11px; font-weight: 600; }
+.ib { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 7px; color: var(--muted); font-size: 15px; }
+.ib:hover { background: var(--hover); color: var(--text); }
+.spin svg { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+
+.w-body { flex: 1; overflow-y: auto; padding: 0 10px 14px; }
+.w-body::-webkit-scrollbar { width: 6px; } .w-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+section { margin-top: 10px; }
+h4 { margin: 0 0 4px 2px; font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 600; cursor: pointer; }
+h4:hover { color: var(--text); }
+.w-row { display: flex; align-items: center; gap: 8px; padding: 6px 6px; border-radius: 9px; }
+.w-row:hover, .w-file:hover { background: var(--hover); }
+.w-row input { width: 15px; height: 15px; accent-color: var(--accent); flex: none; cursor: pointer; }
+.w-link { min-width: 0; } .w-meta { color: var(--muted); font-size: 11px; } .short { max-width: 70px; }
+.w-right { text-align: right; flex: none; display: grid; justify-items: end; gap: 2px; }
+.w-due { font-size: 11.5px; color: var(--muted); }
+.w-pill { font-size: 10px; color: #fff; border-radius: 8px; padding: 0 6px; }
+.u-late, .u-24h { color: var(--bad) !important; } .u-48h { color: var(--warn) !important; } .u-7d { color: var(--accent) !important; }
+.u-bg-late, .u-bg-24h { background: var(--bad); } .u-bg-48h { background: var(--warn); } .u-bg-7d { background: var(--accent); }
+.w-file { display: flex; align-items: center; gap: 8px; width: 100%; padding: 5px 6px; border-radius: 8px; }
+.w-empty { color: var(--muted); margin: 4px 6px; }
+.w-prog { padding: 2px 4px 6px; color: var(--muted); } .w-prog b { color: var(--text); }
+.w-bar { height: 6px; border-radius: 4px; background: var(--hover); overflow: hidden; margin: 0 4px; }
+.w-bar i { display: block; height: 100%; background: var(--accent); }
+.w-grip { position: absolute; right: 2px; bottom: 2px; width: 14px; height: 14px; cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, var(--muted) 50%, var(--muted) 58%, transparent 58%, transparent 70%, var(--muted) 70%, var(--muted) 78%, transparent 78%); opacity: .5; }
+
+/* ficon partagé avec l'appli */
+.ficon { position: relative; border-radius: 3px 6px 3px 3px; background: color-mix(in srgb, var(--c) 20%, transparent); border: 1px solid color-mix(in srgb, var(--c) 60%, transparent); display: grid; place-items: end center; flex: none; }
+.ficon span { display: none; }
+
+.w-menu { position: absolute; right: 8px; top: 40px; z-index: 5; min-width: 230px; background: rgb(var(--bg)); border: 1px solid var(--line); border-radius: 10px; padding: 5px; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+.w-menu button { display: flex; justify-content: space-between; gap: 10px; width: 100%; padding: 7px 10px; border-radius: 7px; }
+.w-menu button:hover { background: var(--hover); } .w-menu .danger { color: var(--bad); }
+.w-menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px; } kbd { font: 10.5px Consolas, monospace; color: var(--muted); }

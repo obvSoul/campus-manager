@@ -1,0 +1,51 @@
+{
+  "name": "campus-manager",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Campus Manager : gestionnaire universitaire local, EPREL comme simple source de synchronisation",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "build": "node scripts/build.mjs",
+    "start": "node scripts/build.mjs && electron .",
+    "sync": "node scripts/build.mjs && electron dist/sync-cli.cjs",
+    "dist": "node scripts/build.mjs && electron-builder --win"
+  },
+  "build": {
+    "appId": "fr.campusmanager.app",
+    "productName": "Campus Manager",
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "build/icon.png", "package.json"],
+    "asarUnpack": ["node_modules/koffi/**/*"],
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Campus Manager",
+      "runAfterFinish": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  },
+  "main": "dist/app.cjs",
+  "dependencies": {
+    "koffi": "^3.3.7",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
+}

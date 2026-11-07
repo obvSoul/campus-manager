@@ -1,0 +1,22 @@
+# Dépendances (npm install les recrée)
+node_modules/
+
+# Fichiers générés (npm run build / npm run dist)
+dist/
+release/
+*.blockmap
+
+# Données locales et journaux : jamais dans le dépôt
+*.log
+*.db
+*.db-*
+session.bin
+sync-report.txt
+
+# Système / éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+.vscode/
+.idea/
