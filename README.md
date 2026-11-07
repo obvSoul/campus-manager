@@ -6,7 +6,11 @@ Les fichiers de cours sont réellement téléchargés et classés automatiquemen
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6) ![Electron](https://img.shields.io/badge/Electron-45-47848f) ![React](https://img.shields.io/badge/React-19-61dafb) ![SQLite](https://img.shields.io/badge/SQLite-node%3Asqlite-003b57) ![Tests](https://img.shields.io/badge/tests-47%20passing-23a55a)
 
-<!-- Captures d'écran : docs/accueil.png, docs/explorateur.png, docs/widget.png -->
+![Accueil : prochains devoirs, dernières publications, progression](docs/accueil.png)
+
+| Explorateur de fichiers | Devoirs | Widget de bureau |
+|---|---|---|
+| ![Explorateur](docs/explorateur.png) | ![Devoirs](docs/devoirs.png) | ![Widget de bureau](docs/widget.png) |
 
 ## Pourquoi
 

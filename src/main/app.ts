@@ -9,7 +9,7 @@ import { app, BrowserWindow, globalShortcut, net, protocol } from "electron";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { repointAutostart, setAutostart } from "./autostart.js";
+import { ensureAutostart, setAutostart } from "./autostart.js";
 import { registerIpc } from "./ipc.js";
 import { Services } from "./services.js";
 import { Widget } from "./widget.js";
@@ -86,12 +86,13 @@ app.whenReady().then(() => {
   // Démarrage avec Windows activé par défaut (une seule fois) ; désactivable dans Paramètres.
   if (!services.db.prepare("SELECT 1 FROM settings WHERE key='autostart'").get()) {
     const on = setAutostart(true);
-    services.db.prepare("INSERT INTO settings(key,value) VALUES('autostart',?)").run(on ? "1" : "0");
-    services.log(`démarrage avec Windows : ${on ? "activé" : "échec"}`);
+    // Le réglage enregistre le CHOIX (activé par défaut), pas le résultat : un échec sera retenté au prochain lancement.
+    services.db.prepare("INSERT INTO settings(key,value) VALUES('autostart','1')").run();
+    services.log(`démarrage avec Windows : ${on ? "activé" : "échec, nouvel essai au prochain lancement"}`);
   }
 
-  // Version installée : si le démarrage avec Windows est activé, on repointe l'entrée vers cet exécutable.
-  else repointAutostart();
+  // Version installée : l'entrée Windows est remise en accord avec ce choix (réinstallation, ancien chemin…).
+  else ensureAutostart((services.db.prepare("SELECT value FROM settings WHERE key='autostart'").get() as { value: string }).value === "1");
 
   if (widget.get().enabled) widget.create();
   const wshot = arg("widget-shot"); // développement : capture du widget puis sortie

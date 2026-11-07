@@ -22,16 +22,17 @@ export function getAutostart(): boolean {
 }
 
 /**
- * Version installée : si une entrée « Campus Manager » existe déjà (par ex. créée par la version de
- * développement) mais pointe ailleurs, on la fait pointer vers cet exécutable. Electron ne voit que
- * les entrées de son propre chemin, d'où la lecture directe du registre.
+ * Version installée, au lancement : remet l'entrée « Campus Manager » en accord avec le choix de
+ * l'utilisateur (réglage `autostart`). Elle peut manquer (une réinstallation passe par le
+ * désinstalleur, qui la retire) ou pointer ailleurs (ancienne version de développement).
+ * Electron ne voit que les entrées de son propre chemin, d'où la lecture directe du registre.
  */
-export function repointAutostart(): void {
-  if (!app.isPackaged || process.platform !== "win32") return;
-  let current: string;
+export function ensureAutostart(wanted: boolean): void {
+  if (!wanted || !app.isPackaged || process.platform !== "win32") return;
+  let current = "";
   try {
     current = execFileSync("reg", ["query", RUN_KEY, "/v", "Campus Manager"], { encoding: "utf8", windowsHide: true });
-  } catch { return; } // pas d'entrée : l'utilisateur a désactivé le démarrage, on ne touche à rien
+  } catch { /* entrée absente : on la recrée */ }
   if (!current.toLowerCase().includes(process.execPath.toLowerCase())) setAutostart(true);
 }
 
