@@ -4,6 +4,8 @@
 
 Les fichiers de cours sont réellement téléchargés et classés automatiquement sur le disque, les devoirs sont suivis avec leurs vraies échéances, et un widget reste affiché sur le bureau Windows.
 
+**[⬇ Télécharger l'installateur Windows](https://github.com/obvSoul/campus-manager/releases/latest)** (version 0.1.0, Windows 10/11 64 bits ; SmartScreen peut avertir car l'installateur n'est pas signé : « Informations complémentaires » puis « Exécuter quand même »).
+
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6) ![Electron](https://img.shields.io/badge/Electron-45-47848f) ![React](https://img.shields.io/badge/React-19-61dafb) ![SQLite](https://img.shields.io/badge/SQLite-node%3Asqlite-003b57) ![Tests](https://img.shields.io/badge/tests-47%20passing-23a55a)
 
 ![Accueil : prochains devoirs, dernières publications, progression](docs/accueil.png)
