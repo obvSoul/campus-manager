@@ -285,6 +285,7 @@ public partial class MainWindow : Window
         };
         if (page is FileBrowser browser)
             browser.Show(Vm.Files, Vm.Mode, showCourse: v.Kind != "course",
+                snippets: v.Kind == "search" ? Core.Search.ContentIndex.Snippets(S.Db, Vm.Files.Select(f => f.Id), v.Query) : null,
                 empty: v.Kind == "favorites" ? "Aucun favori : clic droit sur un fichier > Ajouter aux favoris." : v.Kind == "search" ? "Aucun résultat." : "Aucun fichier ici.");
         else if (keepPage && page == _page) (page as IReloadable)?.Reload();
         if (page != _page) { _page = page; PageHost.Content = page; }

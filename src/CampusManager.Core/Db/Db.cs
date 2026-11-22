@@ -41,9 +41,9 @@ public sealed class Db : IDisposable
     {
         lock (_lock)
         {
-            _c.Execute("BEGIN");
-            try { body(); _c.Execute("COMMIT"); }
-            catch { _c.Execute("ROLLBACK"); throw; }
+            _c.Execute("BEGIN TRANSACTION"); // un seul mot serait pris par Dapper pour une procédure stockée
+            try { body(); _c.Execute("COMMIT TRANSACTION"); }
+            catch { _c.Execute("ROLLBACK TRANSACTION"); throw; }
         }
     }
 

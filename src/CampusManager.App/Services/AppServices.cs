@@ -60,7 +60,29 @@ public sealed class AppServices : IDisposable
     public string? Setting(string key) => Db.One<string>("SELECT value FROM settings WHERE key=@key", new { key });
     public void SetSetting(string key, string value) => Db.Execute("INSERT OR REPLACE INTO settings(key,value) VALUES(@key,@value)", new { key, value });
 
-    public void NotifyChanged() => DataChanged?.Invoke();
+    public void NotifyChanged() { DataChanged?.Invoke(); ScheduleIndex(); }
+
+    readonly object _indexLock = new();
+    bool _indexing, _indexAgain;
+
+    /// <summary>Met à jour l'index du texte des fichiers en arrière-plan (fichiers nouveaux ou modifiés seulement).</summary>
+    public void ScheduleIndex()
+    {
+        lock (_indexLock) { if (_indexing) { _indexAgain = true; return; } _indexing = true; }
+        Task.Run(() =>
+        {
+            while (true)
+            {
+                try
+                {
+                    var n = Core.Search.ContentIndex.IndexPending(Db, Lib);
+                    if (n > 0) { Log($"recherche : {n} fichier(s) indexé(s)"); DataChanged?.Invoke(); GC.Collect(2, GCCollectionMode.Aggressive, true, true); }
+                }
+                catch (Exception e) { Log($"recherche : {e.Message}"); }
+                lock (_indexLock) { if (!_indexAgain) { _indexing = false; return; } _indexAgain = false; }
+            }
+        });
+    }
 
     void Set(SyncState s) { State = s; StateChanged?.Invoke(s); }
 
@@ -111,6 +133,7 @@ public sealed class AppServices : IDisposable
             });
         }
         DataChanged?.Invoke();
+        ScheduleIndex(); // nouveaux documents : leur texte devient cherchable
         // Après une synchro, on rend la mémoire inutilisée au système.
         GC.Collect(2, GCCollectionMode.Aggressive, true, true);
         return State;

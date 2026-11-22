@@ -70,6 +70,9 @@ public static class Schema
         );
         CREATE INDEX IF NOT EXISTS files_sha ON files(sha256);
         CREATE INDEX IF NOT EXISTS files_course ON files(course_id, category);
+        -- Recherche dans le contenu des fichiers (texte extrait des PDF, Word, PowerPoint, texte).
+        CREATE VIRTUAL TABLE IF NOT EXISTS content_fts USING fts5(text, tokenize='trigram remove_diacritics 1');
+        CREATE TABLE IF NOT EXISTS content_index(file_id INTEGER PRIMARY KEY, sha256 TEXT NOT NULL, chars INTEGER NOT NULL, indexed_at INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS remote_aliases(remote_key TEXT PRIMARY KEY, file_id INTEGER NOT NULL, remote_modified INTEGER, remote_size INTEGER);
         """;
 

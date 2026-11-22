@@ -19,7 +19,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ListTpl">
-            <Grid Height="24" Opacity="{Binding Opacity}">
+            <Grid MinHeight="24" Opacity="{Binding Opacity}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="22" />
                     <ColumnDefinition Width="*" MinWidth="160" />
@@ -29,10 +29,15 @@
                     <ColumnDefinition Width="80" />
                 </Grid.ColumnDefinitions>
                 <c:FileIcon Ext="{Binding Ext}" Size="20" VerticalAlignment="Center" HorizontalAlignment="Left" />
-                <DockPanel Grid.Column="1" Margin="12,0,12,0">
-                    <ContentPresenter DockPanel.Dock="Right" ContentTemplate="{StaticResource Badges}" Content="{Binding}" />
-                    <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
-                </DockPanel>
+                <StackPanel Grid.Column="1" Margin="12,0,12,0" VerticalAlignment="Center">
+                    <DockPanel>
+                        <ContentPresenter DockPanel.Dock="Right" ContentTemplate="{StaticResource Badges}" Content="{Binding}" />
+                        <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    </DockPanel>
+                    <!-- Recherche : passage du texte où le mot a été trouvé -->
+                    <TextBlock Text="{Binding Snippet}" ToolTip="{Binding Snippet}" Visibility="{Binding HasSnippet, Converter={StaticResource Vis}}"
+                               FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,1,0,2" />
+                </StackPanel>
                 <Border Grid.Column="2" Style="{StaticResource Tag}"><TextBlock Text="{Binding Category}" /></Border>
                 <TextBlock Grid.Column="3" Text="{Binding Course}" ToolTip="{Binding Course}" Style="{StaticResource TMuted}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
                 <TextBlock Grid.Column="4" Text="{Binding DateText}" Style="{StaticResource TMuted}" VerticalAlignment="Center" />

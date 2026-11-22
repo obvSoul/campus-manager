@@ -43,8 +43,11 @@ public static class Queries
             var terms = q.Search.Trim().ToLowerInvariant().Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
             for (var i = 0; i < terms.Length; i++)
             {
-                where.Add($"(lower(f.local_path) LIKE @t{i} OR lower(c.name) LIKE @t{i} OR lower(f.category) LIKE @t{i} OR lower(COALESCE(r.name,'')) LIKE @t{i} OR lower(COALESCE(r.description,'')) LIKE @t{i})");
+                // Chaque mot doit se trouver dans le nom, la matière, la catégorie, la ressource EPREL… ou dans le texte du fichier.
+                var inContent = Search.ContentIndex.Indexable(terms[i]) ? $" OR f.id IN (SELECT rowid FROM content_fts WHERE content_fts MATCH @m{i})" : "";
+                where.Add($"(lower(f.local_path) LIKE @t{i} OR lower(c.name) LIKE @t{i} OR lower(f.category) LIKE @t{i} OR lower(COALESCE(r.name,'')) LIKE @t{i} OR lower(COALESCE(r.description,'')) LIKE @t{i}{inContent})");
                 args.Add($"t{i}", $"%{terms[i]}%");
+                if (inContent.Length > 0) args.Add($"m{i}", Search.ContentIndex.Quote(terms[i]));
             }
         }
         var order = q.Recent ? "f.added_at DESC, f.id DESC" : "c.semester, c.folder, f.category, f.local_path";

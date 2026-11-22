@@ -54,6 +54,7 @@ public sealed class SettingsPage : UserControl, IReloadable
             Note("Tes fichiers sont de vrais fichiers Windows dans ce dossier."),
             Row(Code(S.Lib.Root), Btn("Ouvrir le dossier", "BtnGhost", () => Shell.Open(S.Lib.Root)).Also(b => b.Margin = new Thickness(10, 0, 0, 0))),
             Note($"Base de données et journaux : {S.DataDir}"),
+            Note($"Recherche dans le texte des fichiers (PDF, Word, PowerPoint, texte, code) : {S.Db.Scalar<long>("SELECT COUNT(*) FROM content_index WHERE chars > 0")} fichier(s) indexé(s), mis à jour après chaque synchronisation."),
             Note("Changer de dossier racine : prévu à une étape suivante (déplacement complet de la bibliothèque).")));
 
         _syncInfo = Note("", "Small");

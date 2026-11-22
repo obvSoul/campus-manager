@@ -73,6 +73,7 @@ public partial class App : Application
         AutoSync = new AutoSync(Services);
         Notifier.Listen(p => Dispatcher.BeginInvoke(() => OpenMain(p)));
         AutoSync.Start();
+        _ = Task.Delay(TimeSpan.FromSeconds(15)).ContinueWith(_ => Services.ScheduleIndex());
 
         // La fenêtre demandée s'affiche d'abord ; le widget est créé juste après (il coûte ~0,5 s au 1er rendu).
         if (!e.Args.Contains("--hidden")) OpenMain(page);

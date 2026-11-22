@@ -8,8 +8,9 @@ using CampusManager.Core.Queries;
 namespace CampusManager.App.Views;
 
 /// <summary>Ligne affichée : le fichier + les textes déjà mis en forme.</summary>
-public record FileRowVm(FileItem F, bool ShowCourse, string Mode)
+public record FileRowVm(FileItem F, bool ShowCourse, string Mode, string? Snippet = null)
 {
+    public bool HasSnippet => Snippet != null;
     public long Id => F.Id;
     public string Name => F.Name;
     public string Ext => F.Ext;
@@ -51,9 +52,11 @@ public partial class FileBrowser : UserControl
         BuildHeaders();
     }
 
-    public void Show(List<FileItem> files, string mode, bool showCourse, string empty)
+    Dictionary<long, string> _snippets = [];
+
+    public void Show(List<FileItem> files, string mode, bool showCourse, string empty, Dictionary<long, string>? snippets = null)
     {
-        _files = files; _mode = mode; _showCourse = showCourse;
+        _files = files; _mode = mode; _showCourse = showCourse; _snippets = snippets ?? [];
         EmptyText.Text = empty;
         Render();
     }
@@ -74,7 +77,7 @@ public partial class FileBrowser : UserControl
 
         List.ItemTemplate = (DataTemplate)FindResource(_mode switch { "list" => "ListTpl", "compact" => "CompactTpl", _ => "GridTpl" });
         List.ItemsPanel = (ItemsPanelTemplate)FindResource(_mode is "grid" or "large" ? "WrapPanelTpl" : "StackPanelTpl");
-        var rows = Sorted().Select(f => new FileRowVm(f, _showCourse, _mode)).ToList();
+        var rows = Sorted().Select(f => new FileRowVm(f, _showCourse, _mode, _snippets.GetValueOrDefault(f.Id))).ToList();
         List.ItemsSource = rows;
         List.SelectedItem = rows.FirstOrDefault(r => r.Id == _w.Vm.Selected);
         Empty.Visibility = _files.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
