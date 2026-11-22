@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>CampusManager.App</RootNamespace>
+    <AssemblyName>Campus Manager</AssemblyName>
+    <ApplicationIcon>..\..\build\icon.ico</ApplicationIcon>
+    <Product>Campus Manager</Product>
+    <Version>0.2.0</Version>
+    <!-- Mémoire d'abord : GC station sans thread d'arrière-plan, pas d'instrumentation PGO. -->
+    <ServerGarbageCollector>false</ServerGarbageCollector>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
+    <TieredPGO>false</TieredPGO>
+    <SatelliteResourceLanguages>fr</SatelliteResourceLanguages>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Include="System.IO" />
+    <Using Include="System.Net.Http" />
+    <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="5" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.*" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.*" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CampusManager.Core\CampusManager.Core.csproj" />
+    <Resource Include="..\..\build\icon.png" Link="Assets\icon.png" />
+  </ItemGroup>
+</Project>

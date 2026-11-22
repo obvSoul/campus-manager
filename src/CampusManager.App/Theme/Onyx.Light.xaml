@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="C.Bg">#f6f7fa</Color>
+    <SolidColorBrush x:Key="Bg" Color="#f6f7fa" />
+    <SolidColorBrush x:Key="Panel" Color="#ffffff" />
+    <SolidColorBrush x:Key="Card" Color="#ffffff" />
+    <SolidColorBrush x:Key="Hover" Color="#e9ecf3" />
+    <SolidColorBrush x:Key="Sel" Color="#dfe2fd" />
+    <SolidColorBrush x:Key="Line" Color="#e1e4ea" />
+    <SolidColorBrush x:Key="Text" Color="#1d2130" />
+    <SolidColorBrush x:Key="Muted" Color="#687085" />
+    <SolidColorBrush x:Key="Accent" Color="#5865f2" />
+    <SolidColorBrush x:Key="AccentHover" Color="#4752c4" />
+    <SolidColorBrush x:Key="AccentSoft" Color="#335865f2" />
+    <SolidColorBrush x:Key="Ok" Color="#1f9d63" />
+    <SolidColorBrush x:Key="OkSoft" Color="#2e1f9d63" />
+    <SolidColorBrush x:Key="Warn" Color="#b7791f" />
+    <SolidColorBrush x:Key="WarnSoft" Color="#2eb7791f" />
+    <SolidColorBrush x:Key="Bad" Color="#d64545" />
+    <SolidColorBrush x:Key="BadSoft" Color="#2ed64545" />
+    <SolidColorBrush x:Key="Overlay" Color="#40000000" />
+</ResourceDictionary>

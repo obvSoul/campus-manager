@@ -1,0 +1,76 @@
+<UserControl x:Class="CampusManager.App.Views.HomePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="18,14,18,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="14" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="14" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="14" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.ColumnSpan="3" Style="{StaticResource CardBox}" Cursor="Hand" MouseLeftButtonUp="UpcomingCard_Click" Background="{DynamicResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Prochains devoirs" Style="{StaticResource H2}" />
+                    <StackPanel x:Name="Upcoming" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="4" Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="Travail" Style="{StaticResource H2}" />
+                    <UniformGrid Columns="2" Margin="-4,0,-4,8">
+                        <Button Style="{StaticResource Stat}" Margin="4" Click="Assignments_Click"><StackPanel><TextBlock x:Name="Open" FontSize="22" FontWeight="SemiBold" /><TextBlock Text="devoirs non terminés" Style="{StaticResource Small}" /></StackPanel></Button>
+                        <Button Style="{StaticResource Stat}" Margin="4" Click="Assignments_Click"><StackPanel><TextBlock x:Name="Late" FontSize="22" FontWeight="SemiBold" /><TextBlock Text="en retard" Style="{StaticResource Small}" /></StackPanel></Button>
+                        <Button Style="{StaticResource Stat}" Margin="4" Click="Work_Click"><StackPanel><TextBlock x:Name="Td" FontSize="22" FontWeight="SemiBold" /><TextBlock Text="fichiers de TD" Style="{StaticResource Small}" /></StackPanel></Button>
+                        <Button Style="{StaticResource Stat}" Margin="4" Click="Work_Click"><StackPanel><TextBlock x:Name="Tp" FontSize="22" FontWeight="SemiBold" /><TextBlock Text="fichiers de TP" Style="{StaticResource Small}" /></StackPanel></Button>
+                    </UniformGrid>
+                    <TextBlock Text="Le suivi « fait / à faire » des TD et TP arrive à l'étape Gestion universitaire." Style="{StaticResource Small}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="Dernières publications" Style="{StaticResource H2}" Cursor="Hand" MouseLeftButtonUp="Recent_Click" />
+                    <UniformGrid x:Name="Recent" Columns="2" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2" Grid.Column="4" Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="Progression des devoirs" Style="{StaticResource H2}" />
+                    <TextBlock Margin="0,0,0,8"><Run x:Name="Done" FontSize="26" FontWeight="SemiBold" /><Run x:Name="Total" /></TextBlock>
+                    <Grid x:Name="BigBar" Height="8" />
+                    <StackPanel x:Name="PerCourse" Margin="0,12,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="4" Style="{StaticResource CardBox}">
+                <StackPanel>
+                    <TextBlock Text="Synchronisation EPREL" Style="{StaticResource H2}" />
+                    <TextBlock x:Name="LastSync" TextWrapping="Wrap" />
+                    <TextBlock x:Name="Counts" Style="{StaticResource Small}" Margin="0,10,0,0" TextWrapping="Wrap" />
+                    <TextBlock x:Name="SyncMsg" FontSize="12" Margin="0,10,0,0" TextWrapping="Wrap" />
+                    <Button x:Name="SyncNow" Style="{StaticResource BtnPrimary}" Margin="0,12,0,0" Click="SyncNow_Click" Content="Synchroniser maintenant" />
+                </StackPanel>
+            </Border>
+
+            <Border x:Name="Unsorted" Grid.Row="4" Grid.Column="2" Style="{StaticResource CardBox}" Cursor="Hand" MouseLeftButtonUp="Unsorted_Click" Background="{DynamicResource Card}">
+                <StackPanel>
+                    <TextBlock Text="À classer" Style="{StaticResource H2}" />
+                    <TextBlock><Run x:Name="UnsortedN" FontWeight="SemiBold" /><Run Text=" fichiers dont la catégorie est incertaine." /></TextBlock>
+                    <TextBlock Text="Clic droit sur un fichier &gt; « Changer de catégorie ». Ton choix est retenu." Style="{StaticResource Small}" Margin="0,10,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

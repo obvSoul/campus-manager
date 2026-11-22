@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
@@ -10,6 +11,9 @@
   </ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="System.IO" />
+    <Using Include="System.Net.Http" />
     <ProjectReference Include="..\..\src\CampusManager.Core\CampusManager.Core.csproj" />
+    <ProjectReference Include="..\..\src\CampusManager.App\CampusManager.App.csproj" />
   </ItemGroup>
 </Project>

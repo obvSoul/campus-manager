@@ -1,0 +1,105 @@
+<Window x:Class="CampusManager.App.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:c="clr-namespace:CampusManager.App.Controls"
+        xmlns:v="clr-namespace:CampusManager.App.Views"
+        Style="{StaticResource CmWindow}" Title="Campus Manager"
+        Width="1280" Height="800" MinWidth="900" MinHeight="560" WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Assets/icon.png">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="264" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <!-- Barre latérale -->
+        <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,1,0" Padding="8,10">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,4,10,14">
+                    <Border Width="26" Height="26" CornerRadius="8" Background="{DynamicResource Accent}">
+                        <TextBlock Text="C" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="Campus Manager" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel x:Name="Nav" DockPanel.Dock="Top" />
+                <TextBlock DockPanel.Dock="Top" Text="MES MATIÈRES" FontSize="11" Style="{StaticResource TMuted}" Margin="10,16,10,6" />
+                <Border DockPanel.Dock="Bottom" BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Margin="0,6,0,0" Padding="0,4,0,0">
+                    <Button x:Name="SettingsNav" Style="{StaticResource Nav}" Click="Settings_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <c:Icon Kind="gear" Foreground="{DynamicResource Muted}" />
+                            <TextBlock Text="Paramètres" Margin="10,0,0,0" />
+                        </StackPanel>
+                    </Button>
+                </Border>
+                <ScrollViewer Style="{StaticResource ThinScroll}" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="TreePanel" />
+                </ScrollViewer>
+            </DockPanel>
+        </Border>
+
+        <!-- Zone principale -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="52" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="18,0,12,0">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="340" Height="34" CornerRadius="8" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" Padding="10,0">
+                            <DockPanel>
+                                <c:Icon Kind="search" Size="16" Foreground="{DynamicResource Muted}" Margin="0,0,8,0" />
+                                <Grid>
+                                    <TextBlock x:Name="SearchHint" Text="Rechercher un cours, un fichier, une matière…" Style="{StaticResource TMuted}" VerticalAlignment="Center" IsHitTestVisible="False" />
+                                    <TextBox x:Name="Search" Style="{StaticResource BareText}" VerticalAlignment="Center" TextChanged="Search_TextChanged" KeyDown="Search_KeyDown" />
+                                </Grid>
+                            </DockPanel>
+                        </Border>
+                        <Border x:Name="Modes" Margin="10,0,0,0" CornerRadius="8" Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" Padding="2">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource IconBtn}" Tag="list" ToolTip="Liste détaillée" Click="Mode_Click"><c:Icon Kind="list" Size="16" /></Button>
+                                <Button Style="{StaticResource IconBtn}" Tag="grid" ToolTip="Grille" Click="Mode_Click"><c:Icon Kind="grid" Size="16" /></Button>
+                                <Button Style="{StaticResource IconBtn}" Tag="large" ToolTip="Grandes icônes" Click="Mode_Click"><c:Icon Kind="large" Size="16" /></Button>
+                                <Button Style="{StaticResource IconBtn}" Tag="compact" ToolTip="Vue compacte" Click="Mode_Click"><c:Icon Kind="compact" Size="16" /></Button>
+                            </StackPanel>
+                        </Border>
+                        <Button x:Name="SyncBtn" Style="{StaticResource IconBtn}" Margin="10,0,0,0" ToolTip="Synchroniser avec EPREL" Click="Sync_Click">
+                            <c:Icon x:Name="SyncIcon" Kind="sync" Size="17" />
+                        </Button>
+                        <Button Style="{StaticResource IconBtn}" Margin="6,0,0,0" ToolTip="Thème" Click="Theme_Click">
+                            <c:Icon x:Name="ThemeIcon" Kind="sun" Size="16" />
+                        </Button>
+                    </StackPanel>
+                    <StackPanel x:Name="Crumbs" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0" />
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="PageArea" AllowDrop="True" DragEnter="Page_DragEnter" DragOver="Page_DragOver" DragLeave="Page_DragLeave" Drop="Page_Drop" Background="Transparent">
+                    <ContentControl x:Name="PageHost" Focusable="False" />
+                    <Border x:Name="DropOutline" BorderBrush="{DynamicResource Accent}" BorderThickness="2" CornerRadius="12" Margin="8"
+                            Background="#0F5865f2" Visibility="Collapsed" IsHitTestVisible="False">
+                        <Border VerticalAlignment="Top" Margin="10" Padding="16,12" CornerRadius="10" Background="{DynamicResource Accent}">
+                            <StackPanel>
+                                <TextBlock x:Name="DropText" Foreground="White" />
+                                <TextBlock Text="Fichier de Windows : copié · fichier de la bibliothèque : déplacé" Foreground="White" Opacity="0.85" FontSize="12" />
+                            </StackPanel>
+                        </Border>
+                    </Border>
+                </Grid>
+                <v:DetailsPane x:Name="Details" Grid.Column="1" Visibility="Collapsed" />
+            </Grid>
+        </Grid>
+
+        <!-- Notification -->
+        <Border x:Name="Toast" Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,18"
+                Background="{DynamicResource Panel}" BorderBrush="{DynamicResource Line}" BorderThickness="1" CornerRadius="9" Padding="16,9"
+                Visibility="Collapsed" IsHitTestVisible="False">
+            <TextBlock x:Name="ToastText" />
+        </Border>
+    </Grid>
+</Window>
