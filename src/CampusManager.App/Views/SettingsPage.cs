@@ -71,7 +71,17 @@ public sealed class SettingsPage : UserControl, IReloadable
         var dark = Btn("Onyx (sombre)", "BtnChoice", () => { _w.Vm.Theme = "dark"; Reload(); });
         var light = Btn("Clair", "BtnChoice", () => { _w.Vm.Theme = "light"; Reload(); });
         Ui.SetActive(dark, _w.Vm.Theme == "dark"); Ui.SetActive(light, _w.Vm.Theme == "light");
-        _root.Children.Add(Card(H2("Apparence"), Row(dark, light)));
+        var cur = double.TryParse(S.Setting("uiOpacity"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var ov) ? ov : MainWindow.DefaultOpacity;
+        string OpLabel(double pct) => $"Opacité du fond de la fenêtre : {Math.Round(pct)} % (plus bas = on voit davantage ce qu'il y a derrière)";
+        var opText = Note(OpLabel(cur * 100), "TMuted");
+        var op = new Slider { Minimum = 20, Maximum = 100, Value = Math.Round(cur * 100), IsMoveToPointEnabled = true, Margin = new Thickness(0, 4, 0, 0) };
+        op.ValueChanged += (_, e) =>
+        {
+            S.SetSetting("uiOpacity", (e.NewValue / 100).ToString(System.Globalization.CultureInfo.InvariantCulture));
+            opText.Text = OpLabel(e.NewValue);
+            _w.ApplyTint();
+        };
+        _root.Children.Add(Card(H2("Apparence"), Row(dark, light), opText, op));
 
         _root.Children.Add(Card(H2("Démarrage de Windows"),
             Check("Lancer Campus Manager à l'ouverture de session (widget seul, sans fenêtre)", Autostart.Get(), on =>

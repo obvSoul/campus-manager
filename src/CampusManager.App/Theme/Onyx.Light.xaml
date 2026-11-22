@@ -20,9 +20,4 @@
     <SolidColorBrush x:Key="Bad" Color="#D64545" />
     <SolidColorBrush x:Key="BadSoft" Color="#2ED64545" />
     <SolidColorBrush x:Key="Overlay" Color="#40000000" />
-    <LinearGradientBrush x:Key="Veil" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#80F4F6FA" Offset="0" />
-        <GradientStop Color="#A6F4F6FA" Offset="0.5" />
-        <GradientStop Color="#CCF4F6FA" Offset="1" />
-    </LinearGradientBrush>
 </ResourceDictionary>

@@ -34,7 +34,6 @@ public partial class MainWindow : Window
     public MainWindow(string page)
     {
         InitializeComponent();
-        Backdrop.Source = Wallpaper.Load(); // fond d'écran Windows, petit et flouté
         App.Trace("InitializeComponent");
         Vm.Theme = S.Setting("uiTheme") ?? "dark";
         Vm.Mode = S.Setting("uiMode") ?? "list";
@@ -91,6 +90,7 @@ public partial class MainWindow : Window
         var dicts = Application.Current.Resources.MergedDictionaries;
         dicts[0] = new ResourceDictionary { Source = new Uri($"Theme/Onyx.{(theme == "light" ? "Light" : "Dark")}.xaml", UriKind.Relative) };
         ThemeIcon.Kind = theme == "dark" ? "sun" : "moon";
+        ApplyTint();
         if (IsLoaded) Dwm.DarkTitleBar(this, theme == "dark");
         App.Widget?.ApplyAppTheme();
     }
@@ -189,6 +189,32 @@ public partial class MainWindow : Window
     }
 
     void Settings_Click(object sender, RoutedEventArgs e) => Vm.Go("settings");
+
+    // ---------- Fenêtre sans cadre ----------
+
+    void Min_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+    void Max_Click(object sender, RoutedEventArgs e) => WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+    void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+    protected override void OnStateChanged(EventArgs e)
+    {
+        base.OnStateChanged(e);
+        // Agrandie, une fenêtre sans cadre déborde de l'écran : marge pour rester dans la zone visible.
+        var max = WindowState == WindowState.Maximized;
+        Root.Margin = max ? new Thickness(7) : new Thickness(0);
+        Root.CornerRadius = new CornerRadius(max ? 0 : 14);
+        MaxIcon.Kind = max ? "restore" : "max";
+    }
+
+    public const double DefaultOpacity = 0.72;
+
+    /// <summary>Teinte du fond : couleur du thème avec l'opacité choisie (on voit ce qu'il y a derrière).</summary>
+    public void ApplyTint()
+    {
+        var o = double.TryParse(S.Setting("uiOpacity"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var v) ? v : DefaultOpacity;
+        var c = (Color)FindResource("C.Bg");
+        Root.Background = new SolidColorBrush(Color.FromArgb((byte)Math.Round(Math.Clamp(o, 0.2, 1) * 255), c.R, c.G, c.B));
+    }
 
     // ---------- Barre du haut ----------
 

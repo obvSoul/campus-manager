@@ -21,5 +21,8 @@
     <Geometry x:Key="I.sun">M10 6a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM10 1.5v2M10 16.5v2M1.5 10h2M16.5 10h2M4 4l1.4 1.4M14.6 14.6 16 16M4 16l1.4-1.4M14.6 5.4 16 4</Geometry>
     <Geometry x:Key="I.moon">M16 12.5A7 7 0 0 1 7.5 4a7 7 0 1 0 8.5 8.5z</Geometry>
     <Geometry x:Key="I.alert">M10 3 2 17h16zM10 8v4M10 14.5v.01</Geometry>
+    <Geometry x:Key="I.min">M5 10h10</Geometry>
+    <Geometry x:Key="I.max">M5 5h10v10H5z</Geometry>
+    <Geometry x:Key="I.restore">M7 7h8v8H7zM5 13V5h8</Geometry>
     <Geometry x:Key="I.dots">M5 10h.01M10 10h.01M15 10h.01</Geometry>
 </ResourceDictionary>
