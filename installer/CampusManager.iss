@@ -54,6 +54,42 @@ Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueName: 
 Filename: "{app}\Campus Manager.exe"; Description: "Lancer Campus Manager"; Flags: nowait postinstall
 
 [Code]
+// --- Ancienne version 0.1 (Electron) -------------------------------------------------------------
+// Elle s'installait ailleurs (Programs\campus-manager) : on la désinstalle avant d'installer celle-ci,
+// sinon les deux versions se disputeraient le démarrage avec Windows. Son désinstalleur garde toujours
+// la base (%APPDATA%\Campus Manager) et les cours (Documents\Campus Manager) : rien n'est perdu.
+function RemoveOldElectron(): String;
+var
+  Dir, Unins: String;
+  Code, I: Integer;
+begin
+  Result := '';
+  Dir := ExpandConstant('{localappdata}\Programs\campus-manager');
+  Unins := Dir + '\Uninstall Campus Manager.exe';
+  if not FileExists(Unins) then Exit;
+  Log('Ancienne version 0.1 trouvée : désinstallation.');
+  // L'ancienne appli doit être fermée (seulement ses processus, repérés par leur dossier).
+  Exec(ExpandConstant('{sys}\WindowsPowerShell\v1.0\powershell.exe'),
+    '-NoProfile -NonInteractive -Command "Get-Process | Where-Object { $_.Path -like ''*\Programs\campus-manager\*'' } | Stop-Process -Force"',
+    '', SW_HIDE, ewWaitUntilTerminated, Code);
+  Exec(Unins, '/S', Dir, SW_HIDE, ewWaitUntilTerminated, Code);
+  // Le désinstalleur se relance depuis un dossier temporaire : on attend que le programme ait disparu.
+  for I := 1 to 120 do
+  begin
+    if not FileExists(Dir + '\Campus Manager.exe') then Break;
+    Sleep(500);
+  end;
+  if FileExists(Dir + '\Campus Manager.exe') then
+    Result := 'L''ancienne version 0.1 de Campus Manager n''a pas pu être désinstallée.' + #13#10 +
+              'Désinstalle-la depuis Paramètres > Applications (tes cours et ta base sont gardés), puis relance cette installation.'
+  else
+    Log('Ancienne version 0.1 désinstallée.');
+end;
+
+function PrepareToInstall(var NeedsRestart: Boolean): String;
+begin
+  Result := RemoveOldElectron();
+end;
 { La base (devoirs, réglages), le jeton chiffré et les journaux sont dans %APPDATA%\Campus Manager.
   Ils sont gardés par défaut ; une désinstallation silencieuse ne les supprime qu'avec /DELETEDATA=1.
   Les cours téléchargés (Documents\Campus Manager) ne sont JAMAIS supprimés : ce sont tes fichiers. }
