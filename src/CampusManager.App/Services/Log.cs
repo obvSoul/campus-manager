@@ -50,5 +50,32 @@ public static class Fmt
     ];
     public static string KindColor(string ext) => Kinds.FirstOrDefault(k => k.Exts.Contains(ext)).Color ?? "#7d8597";
 
+    /// <summary>Couleur propre à chaque catégorie, pour distinguer d'un coup d'œil cours, TD, TP…</summary>
+    static readonly Dictionary<string, string> CategoryColors = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["Cours"] = "#4c8dff",                     // bleu
+        ["TD"] = "#a274f0",                        // violet
+        ["TP"] = "#3fb37f",                        // vert
+        ["Exercices"] = "#2bb3c0",                 // cyan
+        ["Devoirs"] = "#f08a3c",                   // orange
+        ["Projets"] = "#e45f9c",                   // rose
+        ["Corrections"] = "#d9a93f",               // jaune
+        ["Documents complémentaires"] = "#8a93a6", // gris bleuté
+        ["À classer"] = "#f2545b",                 // rouge : à traiter
+    };
+    const string NeutralColor = "#7d8597";
+    public static string CategoryColor(string category) => CategoryColors.GetValueOrDefault(category, NeutralColor);
+
+    static readonly Dictionary<string, (System.Windows.Media.Brush Fg, System.Windows.Media.Brush Bg)> CategoryBrushCache = new(StringComparer.OrdinalIgnoreCase);
+    /// <summary>Texte coloré + fond très léger de la même couleur (étiquettes).</summary>
+    public static (System.Windows.Media.Brush Fg, System.Windows.Media.Brush Bg) CategoryBrushes(string category)
+    {
+        if (CategoryBrushCache.TryGetValue(category, out var b)) return b;
+        var c = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(CategoryColor(category));
+        var fg = new System.Windows.Media.SolidColorBrush(c); fg.Freeze();
+        var bg = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(40, c.R, c.G, c.B)); bg.Freeze();
+        return CategoryBrushCache[category] = (fg, bg);
+    }
+
     public static readonly string[] Categories = ["Cours", "TD", "TP", "Exercices", "Devoirs", "Projets", "Corrections", "Documents complémentaires", "À classer"];
 }

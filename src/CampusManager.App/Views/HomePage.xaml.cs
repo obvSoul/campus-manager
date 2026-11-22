@@ -68,7 +68,10 @@ public partial class HomePage : UserControl, IReloadable
             p.Children.Add(icon);
             var t = new StackPanel();
             t.Children.Add(W.Text(f.Name));
-            t.Children.Add(W.Text($"{f.Category} · {f.Course}", "Small"));
+            var sub = W.Text("", "Small");
+            sub.Inlines.Add(new System.Windows.Documents.Run(f.Category) { Foreground = Fmt.CategoryBrushes(f.Category).Fg, FontWeight = FontWeights.SemiBold });
+            sub.Inlines.Add(new System.Windows.Documents.Run($" · {f.Course}"));
+            t.Children.Add(sub);
             p.Children.Add(t);
             b.Content = p;
             var file = f;

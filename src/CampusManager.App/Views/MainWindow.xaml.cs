@@ -168,12 +168,14 @@ public partial class MainWindow : Window
                 if (!IsOpen(ck)) continue;
                 foreach (var cat in c.Categories)
                 {
-                    var cr = new Button { Style = (Style)FindResource("Row"), Padding = new Thickness(42, 4, 8, 4) };
+                    var cr = new Button { Style = (Style)FindResource("Row"), Padding = new Thickness(38, 4, 8, 4) };
                     Ui.SetActive(cr, active && Vm.View.Category == cat.Name);
                     var dp = new DockPanel();
                     var cnt = new TextBlock { Text = cat.Count.ToString(), FontSize = 11, Style = (Style)FindResource("TMuted") };
                     DockPanel.SetDock(cnt, Dock.Right);
                     dp.Children.Add(cnt);
+                    var dot = new System.Windows.Shapes.Ellipse { Width = 8, Height = 8, Fill = Fmt.CategoryBrushes(cat.Name).Fg, Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center };
+                    dp.Children.Add(dot);
                     dp.Children.Add(new TextBlock { Text = cat.Name, FontSize = 12.5, TextTrimming = TextTrimming.CharacterEllipsis, Style = (Style)FindResource("TMuted") });
                     cr.Content = dp;
                     var name = cat.Name;

@@ -205,7 +205,8 @@ public sealed class WidgetWindow : Window
         var p = new DockPanel();
         p.Children.Add(new FileIcon { Ext = f.Ext, Size = 16, ShowLabel = false, Margin = new Thickness(0, 0, 8, 0), VerticalAlignment = VerticalAlignment.Center });
         var m = new TextBlock { Text = meta, FontSize = 11, MaxWidth = 90, TextTrimming = TextTrimming.CharacterEllipsis, Margin = new Thickness(8, 0, 0, 0) };
-        m.SetResourceReference(TextBlock.ForegroundProperty, "Muted");
+        if (meta == f.Category) { m.Foreground = Fmt.CategoryBrushes(f.Category).Fg; m.FontWeight = FontWeights.SemiBold; }
+        else m.SetResourceReference(TextBlock.ForegroundProperty, "Muted");
         DockPanel.SetDock(m, Dock.Right);
         p.Children.Add(m);
         p.Children.Add(new TextBlock { Text = f.Name, TextTrimming = TextTrimming.CharacterEllipsis });

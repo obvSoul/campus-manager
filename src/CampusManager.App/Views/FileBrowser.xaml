@@ -38,7 +38,7 @@
                     <TextBlock Text="{Binding Snippet}" ToolTip="{Binding Snippet}" Visibility="{Binding HasSnippet, Converter={StaticResource Vis}}"
                                FontSize="11.5" Foreground="{DynamicResource Muted}" TextTrimming="CharacterEllipsis" Margin="0,1,0,2" />
                 </StackPanel>
-                <Border Grid.Column="2" Style="{StaticResource Tag}"><TextBlock Text="{Binding Category}" /></Border>
+                <Border Grid.Column="2" Style="{StaticResource Tag}" Background="{Binding CatBg}"><TextBlock Text="{Binding Category}" Foreground="{Binding CatFg}" FontWeight="SemiBold" /></Border>
                 <TextBlock Grid.Column="3" Text="{Binding Course}" ToolTip="{Binding Course}" Style="{StaticResource TMuted}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,0,12,0" />
                 <TextBlock Grid.Column="4" Text="{Binding DateText}" Style="{StaticResource TMuted}" VerticalAlignment="Center" />
                 <TextBlock Grid.Column="5" Text="{Binding SizeText}" Style="{StaticResource TMuted}" VerticalAlignment="Center" HorizontalAlignment="Right" />
@@ -48,6 +48,9 @@
         <DataTemplate x:Key="CompactTpl">
             <DockPanel Opacity="{Binding Opacity}" Margin="0,-2">
                 <c:FileIcon Ext="{Binding Ext}" Size="16" ShowLabel="False" VerticalAlignment="Center" Margin="0,0,10,0" />
+                <Border DockPanel.Dock="Right" Style="{StaticResource Tag}" Background="{Binding CatBg}" Margin="8,0,0,0" Padding="6,0">
+                    <TextBlock Text="{Binding Category}" Foreground="{Binding CatFg}" FontSize="11" FontWeight="SemiBold" />
+                </Border>
                 <ContentPresenter DockPanel.Dock="Right" ContentTemplate="{StaticResource Badges}" Content="{Binding}" />
                 <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
             </DockPanel>
@@ -58,7 +61,10 @@
                 <c:FileIcon Ext="{Binding Ext}" Size="{Binding TileIcon}" HorizontalAlignment="Center" />
                 <TextBlock Text="{Binding Name}" ToolTip="{Binding Name}" TextTrimming="CharacterEllipsis" TextAlignment="Center" Margin="0,8,0,0" />
                 <ContentPresenter ContentTemplate="{StaticResource Badges}" Content="{Binding}" HorizontalAlignment="Center" />
-                <TextBlock Text="{Binding TileSub}" Style="{StaticResource Small}" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
+                <Border Style="{StaticResource Tag}" Background="{Binding CatBg}" HorizontalAlignment="Center" Margin="0,4,0,2">
+                    <TextBlock Text="{Binding Category}" Foreground="{Binding CatFg}" FontWeight="SemiBold" />
+                </Border>
+                <TextBlock Text="{Binding Course}" Style="{StaticResource Small}" TextTrimming="CharacterEllipsis" TextAlignment="Center" />
             </StackPanel>
         </DataTemplate>
 

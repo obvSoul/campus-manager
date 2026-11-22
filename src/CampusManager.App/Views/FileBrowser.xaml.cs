@@ -11,6 +11,8 @@ namespace CampusManager.App.Views;
 public record FileRowVm(FileItem F, bool ShowCourse, string Mode, string? Snippet = null)
 {
     public bool HasSnippet => Snippet != null;
+    public System.Windows.Media.Brush CatFg => Fmt.CategoryBrushes(F.Category).Fg;
+    public System.Windows.Media.Brush CatBg => Fmt.CategoryBrushes(F.Category).Bg;
     public long Id => F.Id;
     public string Name => F.Name;
     public string Ext => F.Ext;

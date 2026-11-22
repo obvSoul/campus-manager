@@ -86,7 +86,14 @@ public sealed class DetailsPane : Border
         }
         Row("Matière", f.Course.Length > 0 ? f.Course : "—");
         Row("Semestre", f.Semester.Length > 0 ? f.Semester : "—");
-        Row("Type", f.Category);
+        Row("Type", "");
+        {
+            var (fg, bg) = Fmt.CategoryBrushes(f.Category);
+            var tag = new Border { Background = bg, CornerRadius = new CornerRadius(5), Padding = new Thickness(7, 1, 7, 1), HorizontalAlignment = HorizontalAlignment.Left, Margin = new Thickness(0, 2, 0, 2),
+                Child = new TextBlock { Text = f.Category, Foreground = fg, FontSize = 12, FontWeight = FontWeights.SemiBold } };
+            Grid.SetRow(tag, meta.RowDefinitions.Count - 1); Grid.SetColumn(tag, 1);
+            meta.Children.Add(tag);
+        }
         Row("Extension", "." + (f.Ext.Length > 0 ? f.Ext : "?"));
         Row("Taille", Fmt.Size(f.Size));
         Row("Ajouté le", Fmt.Date(f.AddedAt, true));
