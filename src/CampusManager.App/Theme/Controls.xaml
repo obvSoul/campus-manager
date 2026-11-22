@@ -87,6 +87,7 @@
     <!-- Ligne cliquable : navigation, arborescence, éléments de liste. -->
     <Style x:Key="Row" TargetType="Button" BasedOn="{StaticResource Plain}">
         <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="c:Ui.Radius" Value="7" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -222,7 +223,8 @@
                     <StackPanel Orientation="Horizontal" Background="Transparent">
                         <Border x:Name="box" Width="16" Height="16" CornerRadius="4" BorderThickness="1.5" VerticalAlignment="Center"
                                 BorderBrush="{DynamicResource Muted}" Background="Transparent">
-                            <Path x:Name="mark" Data="M3.5 8.2 6.6 11.2 12.5 4.8" Stroke="White" StrokeThickness="2" Visibility="Collapsed"
+                            <Path x:Name="mark" Data="M2.3 6.6 5.1 9.3 10.7 3.7" Stroke="White" StrokeThickness="1.8" Visibility="Collapsed"
+                                  Width="13" Height="13" HorizontalAlignment="Center" VerticalAlignment="Center"
                                   StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" />
                         </Border>
                         <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center" />

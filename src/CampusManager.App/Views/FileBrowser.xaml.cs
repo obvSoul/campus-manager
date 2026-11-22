@@ -67,7 +67,7 @@ public partial class FileBrowser : UserControl
         CourseCol.MinWidth = _showCourse ? 120 : 0;
         BuildHeaders();
         SortBox.SelectedItem = SortBox.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (string)i.Tag == _sortKey);
-        SortDir.Content = _asc ? "↑" : "↓";
+        SortDir.Content = _asc ? "▴" : "▾";
 
         List.ItemTemplate = (DataTemplate)FindResource(_mode switch { "list" => "ListTpl", "compact" => "CompactTpl", _ => "GridTpl" });
         List.ItemsPanel = (ItemsPanelTemplate)FindResource(_mode is "grid" or "large" ? "WrapPanelTpl" : "StackPanelTpl");
@@ -99,7 +99,7 @@ public partial class FileBrowser : UserControl
         void H(int col, string key, string label, HorizontalAlignment align = HorizontalAlignment.Left)
         {
             var b = new Button { Style = (Style)FindResource("Plain"), HorizontalAlignment = align, Margin = new Thickness(col == 1 ? 12 : 0, 0, 0, 0) };
-            b.Content = W.Text(label + (_sortKey == key ? (_asc ? " ↑" : " ↓") : ""), "Small");
+            b.Content = W.Text(label + (_sortKey == key ? (_asc ? " ▴" : " ▾") : ""), "Small");
             b.Click += (_, _) => { _asc = _sortKey != key || !_asc; _sortKey = key; Render(); };
             Grid.SetColumn(b, col);
             HeadGrid.Children.Add(b);

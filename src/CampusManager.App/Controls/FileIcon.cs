@@ -50,12 +50,18 @@ public class FileIcon : FrameworkElement
             ctx.ArcTo(new Point(0.5 + r, 0.5), new Size(r, r), 0, false, SweepDirection.Clockwise, true, false);
         }
         g.Freeze();
+        dc.PushTransform(new TranslateTransform(Math.Max(0, (ActualWidth - w) / 2), Math.Max(0, (ActualHeight - h) / 2)));
         dc.DrawGeometry(b.Fill, b.Border, g);
-        if (!ShowLabel || Size < 18) return;
+        if (!ShowLabel || Size < 18) { dc.Pop(); return; }
         var label = (string.IsNullOrEmpty(Ext) ? "?" : Ext.Length > 4 ? Ext[..4] : Ext).ToUpperInvariant();
-        var ft = new FormattedText(label, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Face, Math.Max(8, Size * 0.26) * 0.75 * 96 / 72, b.Text,
-            VisualTreeHelper.GetDpi(this).PixelsPerDip);
+        var dip = VisualTreeHelper.GetDpi(this).PixelsPerDip;
+        var em = Math.Max(8, Size * 0.26) * 0.75 * 96 / 72;
+        var ft = new FormattedText(label, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Face, em, b.Text, dip);
+        // « HTML », « JSON »… : la police est réduite pour rester dans la pastille.
+        var room = w - Math.Max(3, Size * 0.14);
+        if (ft.Width > room) ft = new FormattedText(label, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, Face, em * room / ft.Width, b.Text, dip);
         dc.DrawText(ft, new Point((w - ft.Width) / 2, h * 0.88 - ft.Height));
+        dc.Pop();
     }
 
     static T Freeze<T>(T f) where T : Freezable { f.Freeze(); return f; }

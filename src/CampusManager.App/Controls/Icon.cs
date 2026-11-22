@@ -30,8 +30,11 @@ public class Icon : FrameworkElement
     {
         if (TryFindResource("I." + Kind) is not Geometry g) return;
         var pen = new Pen(Foreground, 1.6) { StartLineCap = PenLineCap.Round, EndLineCap = PenLineCap.Round, LineJoin = PenLineJoin.Round };
+        // Centré dans la place réellement donnée (un parent peut l'étirer plus haut que Size).
+        dc.PushTransform(new TranslateTransform(Math.Max(0, (ActualWidth - Size) / 2), Math.Max(0, (ActualHeight - Size) / 2)));
         dc.PushTransform(new ScaleTransform(Size / 20, Size / 20));
         dc.DrawGeometry(null, pen, g);
+        dc.Pop();
         dc.Pop();
     }
 

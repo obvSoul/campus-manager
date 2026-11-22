@@ -271,7 +271,9 @@ public partial class MainWindow : Window
         foreach (var b in Nav.Children.OfType<Button>()) Ui.SetActive(b, (string)b.Tag == v.Kind);
         Ui.SetActive(SettingsNav, v.Kind == "settings");
         if (v.Kind != "search" && Search.Text.Length > 0) { _suppressSearch = true; Search.Text = ""; _suppressSearch = false; }
-        if (!keepPage) BuildTree();
+        // La matière ouverte est dépliée dans l'arborescence.
+        var expanded = v.Kind == "course" && _open.Add($"c:{v.CourseId}");
+        if (!keepPage || expanded) BuildTree();
 
         if (v.FileQuery is { } q) Vm.Files = Queries.ListFiles(S.Db, q);
         FrameworkElement page = v.Kind switch
