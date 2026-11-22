@@ -46,5 +46,5 @@ l'interface peuvent l'utiliser en même temps.
   si le choix de l'utilisateur est « activé » (une réinstallation peut l'avoir retirée).
 
 ## Tests
-`dotnet test` : 61 tests xUnit sur de vrais fichiers dans un dossier temporaire ; l'API Moodle y est
+`dotnet test` : 81 tests xUnit sur de vrais fichiers dans un dossier temporaire ; l'API Moodle y est
 simulée (format documenté). Ils prouvent la logique, pas que le vrai EPREL expose ces données.

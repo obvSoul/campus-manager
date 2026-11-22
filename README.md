@@ -6,7 +6,7 @@ Les fichiers de cours sont réellement téléchargés et classés automatiquemen
 
 **[⬇ Télécharger l'installateur Windows](https://github.com/obvSoul/campus-manager/releases/latest)** (Windows 10/11 64 bits ; SmartScreen peut avertir car l'installateur n'est pas signé : « Informations complémentaires » puis « Exécuter quand même »).
 
-![C#](https://img.shields.io/badge/C%23-.NET%2010-512bd4) ![WPF](https://img.shields.io/badge/UI-WPF-0c54c2) ![SQLite](https://img.shields.io/badge/SQLite-Microsoft.Data.Sqlite-003b57) ![Tests](https://img.shields.io/badge/tests-61%20passing-23a55a)
+![C#](https://img.shields.io/badge/C%23-.NET%2010-512bd4) ![WPF](https://img.shields.io/badge/UI-WPF-0c54c2) ![SQLite](https://img.shields.io/badge/SQLite-Microsoft.Data.Sqlite-003b57) ![Tests](https://img.shields.io/badge/tests-81%20passing-23a55a)
 
 ![Accueil : prochains devoirs, dernières publications, progression](docs/accueil.png)
 
@@ -24,9 +24,13 @@ Sur Moodle, les documents sont dispersés entre des dizaines de sections, les da
 - **Bibliothèque physique** : fichiers rangés dans `Documents\Campus Manager\Semestre\Matière\Catégorie`, utilisables avec n'importe quel logiciel.
 - **Classement automatique** (Cours, TD, TP, Corrections, Projets…) par un système de règles pondérées avec score de confiance ; les cas douteux vont dans « À classer ».
 - **Devoirs** : échéances réelles (prolongations comprises), statut « rendu » importé, devoirs des années précédentes séparés.
-- **Explorateur** : 4 vues, tri, recherche globale, aperçu PDF (moteur PDF de Windows), images et texte, glisser-déposer depuis et vers l'Explorateur Windows.
+- **Explorateur** : 4 vues, tri sur 7 critères (tri naturel td1, td2… td10, choix mémorisé), aperçu PDF (moteur PDF de Windows), images et texte, glisser-déposer depuis et vers l'Explorateur Windows.
+- **Recherche dans le texte** des PDF, Word, PowerPoint et fichiers de code (index SQLite FTS5 trigrammes, sans casse ni accents), avec l'extrait où le mot apparaît.
+- **Une couleur par catégorie** (Cours, TD, TP, Projets…) partout dans l'interface.
+- **Synchronisation automatique** à la fréquence choisie et **notifications Windows** : nouveaux documents, devoir à rendre sous 24 h, session expirée.
 - **Widget de bureau** : transparent, fixé au niveau du bureau (sous les fenêtres), masqué automatiquement pendant un jeu en plein écran.
 - **Arrière-plan** : démarrage avec Windows, raccourcis clavier globaux, l'appli continue quand la fenêtre est fermée.
+- **Interface** façon lanceur de jeu : fenêtre sans cadre et translucide (opacité réglable), onglets en haut, panneaux en verre, thèmes sombre et clair.
 - **Installateur** Windows (Inno Setup) sans droits administrateur.
 
 ## Léger
@@ -59,6 +63,7 @@ src/
     Classify/           classement automatique
     Sync/               client API Moodle, SSO, moteur de synchronisation
     Queries/            lectures pour l'interface et le widget
+    Search/             recherche dans le texte des fichiers (extraction + index FTS5)
   CampusManager.App/    WPF : fenêtres, widget, Win32, jeton, démarrage Windows
 tests/CampusManager.Tests/   xUnit (vrais fichiers sur disque, API Moodle simulée)
 installer/              Inno Setup
@@ -66,7 +71,7 @@ installer/              Inno Setup
 
 Détails : [ARCHITECTURE.md](ARCHITECTURE.md).
 
-**Stack** : C# 14 / .NET 10, WPF, CommunityToolkit.Mvvm, Microsoft.Data.Sqlite + Dapper, WebView2 (connexion seulement), Windows.Data.Pdf, xUnit, Inno Setup.
+**Stack** : C# 14 / .NET 10, WPF, CommunityToolkit.Mvvm, Microsoft.Data.Sqlite + Dapper (FTS5), PdfPig, WebView2 (connexion seulement), Windows.Data.Pdf, notifications Windows (CommunityToolkit), xUnit, Inno Setup.
 
 ## Lancer le projet
 
@@ -74,7 +79,7 @@ Prérequis : Windows 10/11, SDK .NET 10.
 
 ```powershell
 dotnet run --project src\CampusManager.App    # lance l'application
-dotnet test                                    # 61 tests
+dotnet test                                    # 81 tests
 installer\build.ps1 -Version 0.2.0             # crée l'installateur dans installer\Output
 ```
 
@@ -84,4 +89,4 @@ La première synchronisation ouvre la page de connexion de l'université. L'appl
 
 ## Feuille de route
 
-Calendrier, synchronisation automatique avec notifications, choix du dossier racine.
+Calendrier des échéances, suivi « fait / à faire » des TD et TP, choix du dossier racine.
