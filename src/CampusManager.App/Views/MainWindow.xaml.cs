@@ -34,6 +34,7 @@ public partial class MainWindow : Window
     public MainWindow(string page)
     {
         InitializeComponent();
+        App.Trace("InitializeComponent");
         Vm.Theme = S.Setting("uiTheme") ?? "dark";
         Vm.Mode = S.Setting("uiMode") ?? "list";
         Vm.Sync = S.State;
@@ -56,7 +57,9 @@ public partial class MainWindow : Window
         _toastTimer.Tick += (_, _) => { _toastTimer.Stop(); Toast.Visibility = Visibility.Collapsed; };
 
         BuildNav();
+        App.Trace("avant Reload");
         Reload();
+        App.Trace("Reload");
     }
 
     void OnSyncState(SyncState s) => Dispatcher.BeginInvoke(() => Vm.Sync = s);

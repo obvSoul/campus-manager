@@ -11,7 +11,8 @@ namespace CampusManager.App.Services;
 /// </summary>
 public sealed class AppServices : IDisposable
 {
-    public const string Eprel = "https://eprel.u-pec.fr";
+    /// <summary>Moodle visé (EPREL par défaut ; variable EPREL_URL pour un autre Moodle, non testé).</summary>
+    public static readonly string Eprel = Environment.GetEnvironmentVariable("EPREL_URL") ?? "https://eprel.u-pec.fr";
 
     public Db Db { get; }
     public Library Lib { get; }

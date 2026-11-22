@@ -31,6 +31,7 @@ public partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        t0 = System.Diagnostics.Stopwatch.StartNew();
         var page = Arg(e.Args, "page");
         _instance = new SingleInstance();
         if (!_instance.IsFirst)
@@ -49,6 +50,7 @@ public partial class App : Application
             client: token => new MoodleClient(AppServices.Eprel, token),
             checkToken: async token => { await new MoodleClient(AppServices.Eprel, token).SiteInfoAsync(); return true; });
 
+        Trace("services");
         _instance.Listen(msg => Dispatcher.BeginInvoke(() => OpenMain(string.IsNullOrEmpty(msg) ? null : msg)));
 
         // Démarrage avec Windows activé par défaut (une seule fois) ; désactivable dans Paramètres.
@@ -64,10 +66,12 @@ public partial class App : Application
         }
         else Autostart.Ensure(auto == "1");
 
+        Trace("autostart");
         Widget = new WidgetController(Services);
-        if (Widget.Get().Enabled) Widget.Create();
-
+        // La fenêtre demandée s'affiche d'abord ; le widget est créé juste après (il coûte ~0,5 s au 1er rendu).
         if (!e.Args.Contains("--hidden")) OpenMain(page);
+        Trace("fenetre");
+        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, () => { if (Widget.Get().Enabled) Widget.Create(); Trace("widget"); });
         // Développement : sélectionner un fichier au lancement (vérifier l'aperçu).
         if (_main != null && long.TryParse(Arg(e.Args, "select"), out var sel)) _main.Vm.Selected = sel;
 
@@ -77,6 +81,10 @@ public partial class App : Application
         // Clic à travers : quand il est actif, le widget ne reçoit plus de clics ; ce raccourci le désactive.
         _hotkeys.Register('X', () => Widget.Update(s => s.ClickThrough = !s.ClickThrough));
     }
+
+    static System.Diagnostics.Stopwatch t0 = new();
+    /// <summary>Mesure du démarrage (variable CAMPUS_TRACE) : écrit les étapes dans le journal.</summary>
+    public static void Trace(string w) { if (Environment.GetEnvironmentVariable("CAMPUS_TRACE") != null) Services?.Log($"trace {w} {t0.ElapsedMilliseconds} ms"); }
 
     public void OpenMain(string? page = null)
     {
@@ -88,7 +96,9 @@ public partial class App : Application
             _main.Activate();
             return;
         }
+        Trace("avant MainWindow");
         _main = new MainWindow(page ?? "home");
+        Trace("MainWindow construite");
         _main.Activated += (_, _) => Widget.SendBack();
         // Fermer = libérer la fenêtre, PAS quitter l'appli.
         _main.Closed += (_, _) =>

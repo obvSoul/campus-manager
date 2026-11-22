@@ -1,7 +1,7 @@
-# Dépendances (npm install les recrée)
+# Anciens fichiers de la version Electron (encore présents localement)
 node_modules/
 
-# Fichiers générés (npm run build / npm run dist)
+# Fichiers générés
 dist/
 release/
 *.blockmap
