@@ -64,7 +64,8 @@ public sealed class AppServices : IDisposable
 
     void Set(SyncState s) { State = s; StateChanged?.Invoke(s); }
 
-    public async Task<SyncState> SyncAsync(bool relogin)
+    /// <param name="interactive">false pour une synchro automatique : la fenêtre de connexion n'est jamais ouverte.</param>
+    public async Task<SyncState> SyncAsync(bool relogin, bool interactive = true)
     {
         if (State.Running) return State;
         Set(State with { Running = true, Message = "Connexion à EPREL…", NeedsLogin = false });
@@ -75,6 +76,11 @@ public sealed class AppServices : IDisposable
             {
                 try { await _checkToken(token); }
                 catch (MoodleException e) when (e.IsAuthError) { _tokens.Clear(); token = null; }
+            }
+            if (token == null && !interactive)
+            {
+                Set(new(false, "Connexion EPREL nécessaire : ouvre Campus Manager et synchronise pour te reconnecter.", State.LastAt, true));
+                return State;
             }
             if (token == null)
             {

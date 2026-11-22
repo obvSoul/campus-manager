@@ -77,4 +77,15 @@ public sealed class AppServicesTests : IDisposable
         Assert.Contains("sync :", log);
         Assert.DoesNotContain("SECRET123", log);
     }
+
+    [Fact]
+    public async Task AutomaticSyncWithoutToken_NeverOpensLoginWindow()
+    {
+        var logins = 0;
+        using var s = Make(new MemTokens(), () => { logins++; return Task.FromResult("T"); }, _ => new FakeMoodle());
+        var st = await s.SyncAsync(false, interactive: false);
+        Assert.Equal(0, logins);
+        Assert.True(st.NeedsLogin);
+        Assert.False(st.Running);
+    }
 }

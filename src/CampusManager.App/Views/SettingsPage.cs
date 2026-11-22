@@ -64,6 +64,7 @@ public sealed class SettingsPage : UserControl, IReloadable
             _syncInfo, Row(_syncBtn, _reloginBtn)));
         UpdateSync(_w.Vm.Sync);
 
+        _root.Children.Add(AutoSyncCard());
         _root.Children.Add(WidgetCard());
 
         var dark = Btn("Onyx (sombre)", "BtnChoice", () => { _w.Vm.Theme = "dark"; Reload(); });
@@ -83,6 +84,30 @@ public sealed class SettingsPage : UserControl, IReloadable
         _root.Children.Add(Card(H2("Application"),
             Note("Fermer cette fenêtre (croix, Alt+F4) ne quitte pas Campus Manager : le widget reste sur le bureau et la synchronisation continue. Ctrl+Alt+C, le raccourci du Bureau ou le menu ⋯ du widget la rouvrent."),
             quit));
+    }
+
+    Border AutoSyncCard()
+    {
+        var a = App.AutoSync;
+        var interval = new ComboBox { Width = 240, HorizontalAlignment = HorizontalAlignment.Left };
+        foreach (var (m, label) in AutoSync.Intervals) interval.Items.Add(new ComboBoxItem { Content = label, Tag = m });
+        interval.SelectedItem = interval.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (int)i.Tag == a.Minutes)
+            ?? interval.Items.OfType<ComboBoxItem>().First(i => (int)i.Tag == AutoSync.DefaultMinutes);
+        interval.SelectionChanged += (_, _) => { if (interval.SelectedItem is ComboBoxItem i) a.Minutes = (int)i.Tag; };
+
+        var n = a.Notify;
+        void SetN(Action<NotifySettings> p) { var x = a.Notify; p(x); a.Notify = x; Reload(); }
+        var subs = new StackPanel { Margin = new Thickness(24, 0, 0, 0), IsEnabled = n.Enabled, Opacity = n.Enabled ? 1 : 0.5 };
+        subs.Children.Add(Check("Nouveaux documents publiés sur EPREL (après une synchro automatique)", n.NewFiles, v => SetN(s => s.NewFiles = v)));
+        subs.Children.Add(Check("Devoir à rendre dans moins de 24 h (un rappel par devoir)", n.Deadlines, v => SetN(s => s.Deadlines = v)));
+
+        return Card(H2("Synchronisation automatique"),
+            Note("Campus Manager synchronise tout seul en arrière-plan, même fenêtre fermée (widget seul). Une synchro automatique n'ouvre jamais la page de connexion : si la session expire, une notification te prévient."),
+            Row(new TextBlock { Text = "Fréquence", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 12, 0) }, interval),
+            Note("Notifications Windows", "TMuted"),
+            Check("Activer les notifications", n.Enabled, v => SetN(s => s.Enabled = v)),
+            subs,
+            Row(Btn("Tester une notification", "BtnGhost", () => Notifier.Show("Campus Manager", "Les notifications fonctionnent : un clic ouvre les devoirs.", "assignments"))));
     }
 
     Border WidgetCard()

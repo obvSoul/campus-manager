@@ -19,6 +19,7 @@ public partial class App : Application
 {
     public static AppServices Services { get; private set; } = null!;
     public static WidgetController Widget { get; private set; } = null!;
+    public static AutoSync AutoSync { get; private set; } = null!;
     public static new App Current => (App)Application.Current;
 
     SingleInstance? _instance;
@@ -68,6 +69,11 @@ public partial class App : Application
 
         Trace("autostart");
         Widget = new WidgetController(Services);
+        // Synchro automatique en arrière-plan + notifications (un clic ouvre la bonne page).
+        AutoSync = new AutoSync(Services);
+        Notifier.Listen(p => Dispatcher.BeginInvoke(() => OpenMain(p)));
+        AutoSync.Start();
+
         // La fenêtre demandée s'affiche d'abord ; le widget est créé juste après (il coûte ~0,5 s au 1er rendu).
         if (!e.Args.Contains("--hidden")) OpenMain(page);
         Trace("fenetre");
