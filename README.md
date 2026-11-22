@@ -35,8 +35,8 @@ La version 0.2 est une réécriture en C# / WPF de la version Electron 0.1. Mesu
 
 | | Electron 0.1 | C# 0.2 |
 |---|---|---|
-| Widget seul (démarrage avec Windows) | 116 Mo | 40 Mo |
-| Widget + fenêtre principale | 125 Mo | 50 Mo |
+| Widget seul (démarrage avec Windows) | 84 Mo juste après le démarrage, 116 Mo après quelques heures | 40 Mo |
+| Widget + fenêtre principale | 125 Mo | 50-56 Mo |
 | Réouverture de la fenêtre | 0,34 s | 0,34 s |
 | Lancement complet (disque en cache) | 0,43-0,67 s | 0,86-1,0 s |
 | Installateur | 117 Mo | 53 Mo |
