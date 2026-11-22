@@ -45,6 +45,9 @@ public partial class FileBrowser : UserControl
     {
         _w = w;
         InitializeComponent();
+        // Tri mémorisé d'une fois sur l'autre (« clé:asc » ou « clé:desc »).
+        if (S.Setting("uiSort")?.Split(':') is [var k, var d] && SortBox.Items.OfType<ComboBoxItem>().Any(i => (string)i.Tag == k))
+        { _sortKey = k; _asc = d == "asc"; }
         BuildHeaders();
     }
 
@@ -62,12 +65,12 @@ public partial class FileBrowser : UserControl
         _loading = true;
         var list = _mode == "list";
         Head.Visibility = list && _files.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
-        SortBar.Visibility = !list && _files.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        SortBar.Visibility = _files.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
         CourseCol.Width = _showCourse ? new GridLength(0.6, GridUnitType.Star) : new GridLength(0);
         CourseCol.MinWidth = _showCourse ? 120 : 0;
         BuildHeaders();
         SortBox.SelectedItem = SortBox.Items.OfType<ComboBoxItem>().FirstOrDefault(i => (string)i.Tag == _sortKey);
-        SortDir.Content = _asc ? "▴" : "▾";
+        SortDir.Content = DirLabel();
 
         List.ItemTemplate = (DataTemplate)FindResource(_mode switch { "list" => "ListTpl", "compact" => "CompactTpl", _ => "GridTpl" });
         List.ItemsPanel = (ItemsPanelTemplate)FindResource(_mode is "grid" or "large" ? "WrapPanelTpl" : "StackPanelTpl");
@@ -79,18 +82,48 @@ public partial class FileBrowser : UserControl
         _loading = false;
     }
 
+    /// <summary>Texte du bouton d'ordre, adapté au critère (« Plus récent d'abord », « A → Z »…).</summary>
+    string DirLabel() => (_asc ? "▴ " : "▾ ") + _sortKey switch
+    {
+        "addedAt" or "modified" => _asc ? "Plus ancien d'abord" : "Plus récent d'abord",
+        "size" => _asc ? "Plus petit d'abord" : "Plus gros d'abord",
+        _ => _asc ? "A → Z" : "Z → A",
+    };
+
+    /// <summary>Les dates et la taille commencent par le plus récent / le plus gros, le reste par ordre alphabétique.</summary>
+    static bool DefaultAsc(string key) => key is not ("addedAt" or "modified" or "size");
+
+    void SetSort(string key, bool asc)
+    {
+        _sortKey = key; _asc = asc;
+        S.SetSetting("uiSort", $"{key}:{(asc ? "asc" : "desc")}");
+        Render();
+    }
+
     IEnumerable<FileItem> Sorted()
     {
+        var modified = new Dictionary<long, DateTime>();
+        DateTime Modified(FileItem f)
+        {
+            if (!modified.TryGetValue(f.Id, out var t))
+            {
+                try { t = File.GetLastWriteTimeUtc(S.Lib.Abs(f.Path)); } catch { t = DateTime.MinValue; }
+                modified[f.Id] = t;
+            }
+            return t;
+        }
         Func<FileItem, IComparable> key = _sortKey switch
         {
             "addedAt" => f => f.AddedAt,
+            "modified" => f => Modified(f),
             "ext" => f => f.Ext,
             "course" => f => f.Course.ToLowerInvariant(),
             "size" => f => f.Size,
             "category" => f => f.Category,
             _ => f => f.Name.ToLowerInvariant(),
         };
-        return _asc ? _files.OrderBy(key) : _files.OrderByDescending(key);
+        var sorted = _asc ? _files.OrderBy(key) : _files.OrderByDescending(key);
+        return sorted.ThenBy(f => f.Name, StringComparer.CurrentCultureIgnoreCase); // à égalité : par nom
     }
 
     void BuildHeaders()
@@ -100,7 +133,7 @@ public partial class FileBrowser : UserControl
         {
             var b = new Button { Style = (Style)FindResource("Plain"), HorizontalAlignment = align, Margin = new Thickness(col == 1 ? 12 : 0, 0, 0, 0) };
             b.Content = W.Text(label + (_sortKey == key ? (_asc ? " ▴" : " ▾") : ""), "Small");
-            b.Click += (_, _) => { _asc = _sortKey != key || !_asc; _sortKey = key; Render(); };
+            b.Click += (_, _) => SetSort(key, _sortKey == key ? !_asc : DefaultAsc(key));
             Grid.SetColumn(b, col);
             HeadGrid.Children.Add(b);
         }
@@ -112,9 +145,10 @@ public partial class FileBrowser : UserControl
     void SortBox_Changed(object sender, SelectionChangedEventArgs e)
     {
         if (_loading || SortBox.SelectedItem is not ComboBoxItem i) return;
-        _sortKey = (string)i.Tag; _asc = true; Render();
+        var k = (string)i.Tag;
+        if (k != _sortKey) SetSort(k, DefaultAsc(k));
     }
-    void SortDir_Click(object sender, RoutedEventArgs e) { _asc = !_asc; Render(); }
+    void SortDir_Click(object sender, RoutedEventArgs e) => SetSort(_sortKey, !_asc);
 
     FileRowVm? Current => List.SelectedItem as FileRowVm;
 

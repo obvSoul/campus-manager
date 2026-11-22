@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CampusManager.App.Views.FileBrowser"
+<UserControl x:Class="CampusManager.App.Views.FileBrowser"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:c="clr-namespace:CampusManager.App.Controls">
@@ -64,10 +64,11 @@
     <Grid Margin="18,14,18,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <!-- En-têtes triables (vue liste) -->
-        <Border x:Name="Head" BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="10,6" Margin="0,0,10,4">
+        <Border x:Name="Head" Grid.Row="1" BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="10,6" Margin="0,0,10,4">
             <Grid x:Name="HeadGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="22" />
@@ -82,21 +83,23 @@
         <!-- Tri (autres vues) -->
         <StackPanel x:Name="SortBar" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Text="Trier par" Style="{StaticResource Small}" VerticalAlignment="Center" Margin="0,0,8,0" />
-            <ComboBox x:Name="SortBox" Width="160" SelectionChanged="SortBox_Changed">
+            <ComboBox x:Name="SortBox" Width="190" SelectionChanged="SortBox_Changed">
                 <ComboBoxItem Tag="name" Content="Nom" />
                 <ComboBoxItem Tag="addedAt" Content="Date d'ajout" />
-                <ComboBoxItem Tag="ext" Content="Type de fichier" />
-                <ComboBoxItem Tag="course" Content="Matière" />
+                <ComboBoxItem Tag="modified" Content="Date de modification" />
                 <ComboBoxItem Tag="size" Content="Taille" />
+                <ComboBoxItem Tag="ext" Content="Type de fichier" />
+                <ComboBoxItem Tag="category" Content="Catégorie (TD, TP…)" />
+                <ComboBoxItem Tag="course" Content="Matière" />
             </ComboBox>
-            <Button x:Name="SortDir" Style="{StaticResource BtnGhost}" Padding="8,2" Margin="8,0,0,0" Click="SortDir_Click" />
+            <Button x:Name="SortDir" Style="{StaticResource BtnGhost}" Padding="10,4" Margin="8,0,0,0" Click="SortDir_Click" ToolTip="Inverser l'ordre" />
         </StackPanel>
-        <ListBox x:Name="List" Grid.Row="1" Style="{StaticResource BareList}" Padding="0,0,0,30"
+        <ListBox x:Name="List" Grid.Row="2" Style="{StaticResource BareList}" Padding="0,0,0,30"
                  SelectionMode="Single" SelectionChanged="List_SelectionChanged" MouseDoubleClick="List_DoubleClick" KeyDown="List_KeyDown"
                  PreviewMouseLeftButtonDown="List_PreviewDown" PreviewMouseMove="List_PreviewMove" ContextMenuOpening="List_ContextMenuOpening">
             <ListBox.ContextMenu><ContextMenu /></ListBox.ContextMenu>
         </ListBox>
-        <StackPanel x:Name="Empty" Grid.Row="1" HorizontalAlignment="Center" Margin="0,80,0,0" Visibility="Collapsed">
+        <StackPanel x:Name="Empty" Grid.Row="2" HorizontalAlignment="Center" Margin="0,80,0,0" Visibility="Collapsed">
             <c:Icon Kind="folder" Size="36" Foreground="{DynamicResource Muted}" HorizontalAlignment="Center" />
             <TextBlock x:Name="EmptyText" Style="{StaticResource TMuted}" Margin="0,8,0,0" TextAlignment="Center" />
         </StackPanel>
