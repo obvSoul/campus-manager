@@ -11,13 +11,21 @@ public sealed class SingleInstance : IDisposable
     public const string MutexName = @"Local\CampusManager.Instance";
     const string PipeName = "CampusManager.Open";
 
+    /// <summary>
+    /// Essai sur d'autres données (CAMPUS_DATA_DIR) : verrou et canal à part, pour tourner à côté de l'appli
+    /// installée sans lui passer la main.
+    /// </summary>
+    static readonly string Suffix = Environment.GetEnvironmentVariable("CAMPUS_DATA_DIR") is { Length: > 0 } d
+        ? "." + Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(d.ToLowerInvariant())))[..12]
+        : "";
+
     readonly Mutex _mutex;
     readonly CancellationTokenSource _stop = new();
     public bool IsFirst { get; }
 
     public SingleInstance()
     {
-        _mutex = new Mutex(true, MutexName, out var created);
+        _mutex = new Mutex(true, MutexName + Suffix, out var created);
         IsFirst = created;
     }
 
@@ -26,7 +34,7 @@ public sealed class SingleInstance : IDisposable
     {
         try
         {
-            using var c = new NamedPipeClientStream(".", PipeName, PipeDirection.Out);
+            using var c = new NamedPipeClientStream(".", PipeName + Suffix, PipeDirection.Out);
             c.Connect(2000);
             using var w = new StreamWriter(c);
             w.WriteLine(message);
@@ -41,7 +49,7 @@ public sealed class SingleInstance : IDisposable
         {
             try
             {
-                using var s = new NamedPipeServerStream(PipeName, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+                using var s = new NamedPipeServerStream(PipeName + Suffix, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
                 await s.WaitForConnectionAsync(_stop.Token);
                 using var r = new StreamReader(s);
                 onMessage(await r.ReadLineAsync(_stop.Token) ?? "");
