@@ -21,3 +21,7 @@ desktop.ini
 .vscode/
 .idea/
 .superpowers/
+bin/
+obj/
+publish/
+installer/Output/
