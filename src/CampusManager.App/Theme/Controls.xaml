@@ -8,7 +8,7 @@
 
     <!-- Fenêtres : style à clé (un style implicite ne s'applique pas aux classes dérivées de Window). -->
     <Style x:Key="CmWindow" TargetType="Window">
-        <Setter Property="Background" Value="{DynamicResource Bg}" />
+        <Setter Property="Background" Value="{DynamicResource Window}" />
         <Setter Property="Foreground" Value="{DynamicResource Text}" />
         <Setter Property="FontFamily" Value="{StaticResource UiFont}" />
         <Setter Property="FontSize" Value="13.5" />
@@ -40,8 +40,8 @@
         <Setter Property="Background" Value="{DynamicResource Card}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Line}" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="12" />
-        <Setter Property="Padding" Value="16" />
+        <Setter Property="CornerRadius" Value="16" />
+        <Setter Property="Padding" Value="18" />
     </Style>
 
     <Style x:Key="Tag" TargetType="Border">
@@ -128,7 +128,8 @@
     </Style>
 
     <Style x:Key="Btn" TargetType="Button" BasedOn="{StaticResource Plain}">
-        <Setter Property="Padding" Value="14,7" />
+        <Setter Property="Padding" Value="16,8" />
+        <Setter Property="c:Ui.Radius" Value="10" />
         <Setter Property="Background" Value="{DynamicResource Card}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Line}" />
         <Setter Property="BorderThickness" Value="1" />
@@ -143,6 +144,7 @@
         <Setter Property="Background" Value="Transparent" />
     </Style>
     <Style x:Key="BtnPrimary" TargetType="Button" BasedOn="{StaticResource Btn}">
+        <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Background" Value="{DynamicResource Accent}" />
         <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
         <Setter Property="Foreground" Value="White" />
@@ -159,6 +161,57 @@
             <Trigger Property="c:Ui.Active" Value="True">
                 <Setter Property="Background" Value="{DynamicResource Accent}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource Accent}" />
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Onglet de la barre du haut : texte, trait bleu sous l'onglet actif. -->
+    <Style x:Key="Tab" TargetType="Button">
+        <Setter Property="Foreground" Value="{DynamicResource Muted}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Margin" Value="4,0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <ContentPresenter Margin="12,10,12,12" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border x:Name="u" Height="2" CornerRadius="1" Margin="12,0" VerticalAlignment="Bottom" Background="{DynamicResource Accent}" Visibility="Hidden" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="{DynamicResource Text}" /></Trigger>
+                        <Trigger Property="c:Ui.Active" Value="True">
+                            <Setter Property="Foreground" Value="{DynamicResource Text}" />
+                            <Setter TargetName="u" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Sélecteur segmenté (« Singleplayer / Multiplayer ») : cadre + boutons, l'actif est rempli en bleu. -->
+    <Style x:Key="Seg" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Bg}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Line}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="3" />
+    </Style>
+    <Style x:Key="SegBtn" TargetType="Button" BasedOn="{StaticResource Plain}">
+        <Setter Property="c:Ui.Radius" Value="8" />
+        <Setter Property="Padding" Value="10,5" />
+        <Setter Property="Foreground" Value="{DynamicResource Muted}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource Text}" />
+                <Setter Property="Background" Value="{DynamicResource Hover}" />
+            </Trigger>
+            <Trigger Property="c:Ui.Active" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Accent}" />
                 <Setter Property="Foreground" Value="White" />
             </Trigger>
         </Style.Triggers>

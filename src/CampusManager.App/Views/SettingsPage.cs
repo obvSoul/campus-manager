@@ -10,7 +10,7 @@ namespace CampusManager.App.Views;
 public sealed class SettingsPage : UserControl, IReloadable
 {
     readonly MainWindow _w;
-    readonly StackPanel _root = new() { Margin = new Thickness(18, 14, 18, 30), MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
+    readonly StackPanel _root = new() { Margin = new Thickness(0, 0, 6, 8), MaxWidth = 760, HorizontalAlignment = HorizontalAlignment.Left };
     TextBlock? _syncInfo;
     Button? _syncBtn, _reloginBtn;
 

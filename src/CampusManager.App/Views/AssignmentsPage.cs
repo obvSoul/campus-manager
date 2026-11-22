@@ -9,7 +9,7 @@ namespace CampusManager.App.Views;
 /// <summary>Devoirs EPREL avec statut PERSONNEL (stocké localement, jamais envoyé à EPREL).</summary>
 public sealed class AssignmentsPage : UserControl, IReloadable
 {
-    readonly StackPanel _root = new() { Margin = new Thickness(18, 14, 18, 30), MaxWidth = 1000, HorizontalAlignment = HorizontalAlignment.Left };
+    readonly StackPanel _root = new() { Margin = new Thickness(0, 0, 6, 8), MaxWidth = 1000, HorizontalAlignment = HorizontalAlignment.Left };
     readonly ComboBox _course = new() { Width = 260 };
     List<AssignmentItem> _list = [];
     long? _open;

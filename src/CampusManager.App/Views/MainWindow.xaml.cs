@@ -25,15 +25,16 @@ public partial class MainWindow : Window
     FrameworkElement? _page;
     bool _suppressSearch;
 
-    static readonly (string Page, string Label, string Icon)[] NavItems =
+    static readonly (string Page, string Label)[] NavItems =
     [
-        ("home", "Accueil", "home"), ("all", "Tous les fichiers", "files"), ("assignments", "Devoirs", "check"),
-        ("work", "TD / TP", "flask"), ("recent", "Récemment ajoutés", "clock"), ("favorites", "Favoris", "star"),
+        ("home", "Accueil"), ("all", "Fichiers"), ("assignments", "Devoirs"),
+        ("work", "TD / TP"), ("recent", "Récents"), ("favorites", "Favoris"),
     ];
 
     public MainWindow(string page)
     {
         InitializeComponent();
+        Backdrop.Source = Wallpaper.Load(); // fond d'écran Windows, petit et flouté
         App.Trace("InitializeComponent");
         Vm.Theme = S.Setting("uiTheme") ?? "dark";
         Vm.Mode = S.Setting("uiMode") ?? "list";
@@ -118,9 +119,9 @@ public partial class MainWindow : Window
 
     void BuildNav()
     {
-        foreach (var (page, label, icon) in NavItems)
+        foreach (var (page, label) in NavItems)
         {
-            var b = new Button { Style = (Style)FindResource("Nav"), Content = IconLabel(icon, label), Tag = page };
+            var b = new Button { Style = (Style)FindResource("Tab"), Content = label, Tag = page };
             b.Click += (_, _) => Vm.Go(page);
             Nav.Children.Add(b);
         }
@@ -216,7 +217,7 @@ public partial class MainWindow : Window
                 Crumbs.Children.Add(ch);
             }
             var last = i == parts.Count - 1;
-            var t = new TextBlock { Text = parts[i], FontSize = 14, FontWeight = last ? FontWeights.SemiBold : FontWeights.Normal, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
+            var t = new TextBlock { Text = parts[i], FontSize = last ? 19 : 15, FontWeight = last ? FontWeights.SemiBold : FontWeights.Normal, TextTrimming = TextTrimming.CharacterEllipsis, VerticalAlignment = VerticalAlignment.Center };
             if (!last) t.SetResourceReference(TextBlock.ForegroundProperty, "Muted");
             if (v.Kind == "course" && i == 1) { t.Cursor = Cursors.Hand; t.MouseLeftButtonUp += (_, _) => Vm.Go(new View("course", v.CourseId)); }
             Crumbs.Children.Add(t);

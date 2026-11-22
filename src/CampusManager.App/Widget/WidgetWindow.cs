@@ -148,7 +148,7 @@ public sealed class WidgetWindow : Window
         var head = new DockPanel { Height = 44, Margin = new Thickness(12, 0, 8, 0), Background = Brushes.Transparent };
         DockPanel.SetDock(head, Dock.Top);
         head.MouseLeftButtonDown += (_, e) => { if (e.ButtonState == MouseButtonState.Pressed) { try { DragMove(); } catch { } } };
-        var logo = new Border { Width = 22, Height = 22, CornerRadius = new CornerRadius(7), Background = new SolidColorBrush(Color.FromRgb(0x58, 0x65, 0xf2)), Margin = new Thickness(0, 0, 8, 0),
+        var logo = new Border { Width = 22, Height = 22, CornerRadius = new CornerRadius(7), Background = new SolidColorBrush(Color.FromRgb(0x2b, 0x5c, 0xff)), Margin = new Thickness(0, 0, 8, 0),
             Child = new TextBlock { Text = "C", Foreground = Brushes.White, FontWeight = FontWeights.Bold, FontSize = 12, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center } };
         head.Children.Add(logo);
         var menu = IconButton(new IconCtl { Kind = "dots", Size = 15 }, "Menu", () => { });

@@ -21,9 +21,13 @@ public sealed class DetailsPane : Border
 
     public DetailsPane()
     {
-        Width = 340;
-        BorderThickness = new Thickness(1, 0, 0, 0);
+        Width = 320;
+        // Panneau en verre, comme les autres cartes.
+        BorderThickness = new Thickness(1);
+        CornerRadius = new CornerRadius(16);
+        ClipToBounds = true;
         SetResourceReference(BorderBrushProperty, "Line");
+        SetResourceReference(BackgroundProperty, "Card");
         Child = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto, Content = _root, Padding = new Thickness(14) };
     }
 
