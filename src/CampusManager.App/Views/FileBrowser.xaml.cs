@@ -115,18 +115,20 @@ public partial class FileBrowser : UserControl
             }
             return t;
         }
-        Func<FileItem, IComparable> key = _sortKey switch
+        // Textes : tri naturel (td1, td2… td10), comme l'Explorateur Windows.
+        var natural = NaturalComparer.Instance;
+        Func<FileItem, string>? text = _sortKey switch
         {
-            "addedAt" => f => f.AddedAt,
-            "modified" => f => Modified(f),
-            "ext" => f => f.Ext,
-            "course" => f => f.Course.ToLowerInvariant(),
-            "size" => f => f.Size,
-            "category" => f => f.Category,
-            _ => f => f.Name.ToLowerInvariant(),
+            "ext" => f => f.Ext, "course" => f => f.Course, "category" => f => f.Category, "name" => f => f.Name, _ => null,
         };
-        var sorted = _asc ? _files.OrderBy(key) : _files.OrderByDescending(key);
-        return sorted.ThenBy(f => f.Name, StringComparer.CurrentCultureIgnoreCase); // à égalité : par nom
+        Func<FileItem, IComparable> value = _sortKey switch
+        {
+            "addedAt" => f => f.AddedAt, "modified" => f => Modified(f), _ => f => f.Size,
+        };
+        var sorted = text != null
+            ? (_asc ? _files.OrderBy(text, natural) : _files.OrderByDescending(text, natural))
+            : (_asc ? _files.OrderBy(value) : _files.OrderByDescending(value));
+        return sorted.ThenBy(f => f.Name, natural); // à égalité : par nom
     }
 
     void BuildHeaders()
