@@ -20,6 +20,18 @@ if (Test-Path $out) { Remove-Item $out -Recurse -Force }
 dotnet publish src\CampusManager.App -c Release -r win-x64 --self-contained true -p:PublishReadyToRun=true -p:Version=$Version -p:DebugType=none -p:ContinuousIntegrationBuild=true -o $out -v q
 if ($LASTEXITCODE -ne 0) { throw 'La publication a échoué.' }
 
+# Test de démarrage : la version publiée (optimisée) doit tenir 5 s sans planter, sur des données jetables.
+$probe = Join-Path $env:TEMP "campus-probe-$Version"
+if (Test-Path $probe) { Remove-Item $probe -Recurse -Force }
+$env:CAMPUS_DATA_DIR = $probe; $env:CAMPUS_ROOT = Join-Path $probe 'lib'
+$p = Start-Process (Join-Path $out 'Campus Manager.exe') -ArgumentList '--hidden' -PassThru
+Start-Sleep 5
+$alive = -not $p.HasExited
+if ($alive) { Stop-Process -Id $p.Id -Force; Start-Sleep 1 }
+Remove-Item Env:CAMPUS_DATA_DIR, Env:CAMPUS_ROOT
+Remove-Item $probe -Recurse -Force -ErrorAction SilentlyContinue
+if (-not $alive) { throw "La version publiée plante au démarrage (code $($p.ExitCode)) : installateur non généré." }
+
 & $iscc /Qp "/DAppVersion=$Version" installer\CampusManager.iss
 if ($LASTEXITCODE -ne 0) { throw "La compilation de l'installateur a échoué." }
 
